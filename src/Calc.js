@@ -5,45 +5,84 @@ import './Calc.css';
 
 function Screen(props){
   return(
-    <div>
-      <input id='calc-screen' type="text" className='screen' value={props.value} />
+    <div className='calc-display'>
+      {props.value}
     </div>
   );
 }
 
 function Key(props){
+  let className = '';
+  if(props.className)
+    className = ' ' + props.className;
   return(
-    <button className='keyboard-button'>{props.label}</button>
+    <button className={'keyboard-button' + className} >{props.label} </button>
   );
 }
 
+function KeyDigit(props){
+  return(
+    <button className={'keyboard-button'} onClick={() => props.callback(props.label)}>{props.label} </button>
+  );
+}
+
+function KeyEnter(props){
+  return(
+    <button className={'keyboard-button key-enter'}>E<br />N<br />T<br />E<br />R</button>
+  )
+}
+
 class Keyboard extends React.Component{
+  constructor(props){
+    super(props);
+
+    this.state = {
+      value:0,
+      setDisplay:props.setDisplayCallback,
+      executeOperation:props.executeOperationCallback
+    };
+    
+  }
+  enterDigit(digit){
+    //this.setState({value: digit})
+    //console.log(this.state.value);
+    this.state.setDisplay(digit);
+  }
+  renderDigitKey(i){
+    return <KeyDigit 
+              label = {i} 
+              callback = {() => this.enterDigit(i)} 
+            />
+  }
   render(){
     return(
-      <div>
-        <div className='key-numbers'>
-          <div className='keyboard-row'>
-            <Key label = {'7'}/>
-            <Key label = {'8'}/>
-            <Key label = {'9'}/>
-          </div>
-          <div className='keyboard-row'>
-            <Key label = {'4'}/>
-            <Key label = {'5'}/>
-            <Key label = {'6'}/>
-          </div>
-          <div className='keyboard-row'>
-            <Key label = {'1'}/>
-            <Key label = {'2'}/>
-            <Key label = {'3'}/>
-          </div>
-          <div className='keyboard-row'>
-            <Key label = {'0'} class={'double-horizontal'}/>
-            <Key label = {'.'}/>
+      <div className = 'keyboard'>
+        
+            <Key label = {'+'}/>
+            <Key label = {'-'}/>
+            <Key label = {'x'}/>
+            <Key label = {'÷'}/>
+
+            {this.renderDigitKey(7)}
+            {this.renderDigitKey(8)}
+            {this.renderDigitKey(9)}
+            {this.renderDigitKey('E')}
+         
+            {this.renderDigitKey(4)}
+            {this.renderDigitKey(5)}
+            {this.renderDigitKey(6)}
             
-          </div>
-          
-        </div>
+            {this.renderDigitKey(1)}
+            {this.renderDigitKey(2)}
+            {this.renderDigitKey(3)}
+         
+            {this.renderDigitKey(0)}
+            {this.renderDigitKey('.')}
+            {this.renderDigitKey('C')}
+         
+
+            <KeyEnter label = {'ENTER'} className= {'key-enter'}/>
+            
       </div>
     )
   }
@@ -54,21 +93,32 @@ class Calc extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      stack:[0,0,0,0]
+      //value to show in display
+      displayValue:0,
+      // stack of values entered
+      stack:[0]
     }
     
   }
  
+  setDisplay(value){
+    this.setState({displayValue:value})
+  }
+
+  executeOperation(operation){
+
+  }
+
   render(){
     return(
-      <div className='calc'>
+      <div className='calculator'>
         <div className='screen-area'>
           <Screen 
-            value = {this.state.stack[0]}
+            value = {this.state.displayValue}
           />
         </div>
         <div className='keyboard-area'>
-          <Keyboard />
+          <Keyboard setDisplayCallback={(value) => this.setDisplay(value)} operationCallback={() => this.executeOperation}/>
         </div>
       </div>
     );
