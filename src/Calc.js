@@ -26,6 +26,7 @@ function KeyDigit(props){
   );
 }
 
+
 function KeyEnter(props){
   return(
     <button className={'keyboard-button key-enter'}>E<br />N<br />T<br />E<br />R</button>
@@ -36,23 +37,40 @@ class Keyboard extends React.Component{
   constructor(props){
     super(props);
 
-    this.state = {
-      value:0,
-      setDisplay:props.setDisplayCallback,
-      executeOperation:props.executeOperationCallback
-    };
+    // keyboard holds its value as a string
+    this.value = '';
+    this.setDisplay = props.setDisplayCallback;
+    this.executeOperation = props.executeOperationCallback;
+    
     
   }
+  clear(){
+    this.value = '';
+    this.setDisplay(0);
+  }
   enterDigit(digit){
-    //this.setState({value: digit})
-    //console.log(this.state.value);
-    this.state.setDisplay(digit);
+    console.log(this.value.length)
+
+    // do not enter a 2nd dot
+    if(digit === '.' && this.value.includes('.'))
+      return;
+    
+    if(this.value.length <= 10){
+      this.value = this.value + digit;
+      this.setDisplay(Number(this.value));
+    }
   }
   renderDigitKey(i){
     return <KeyDigit 
               label = {i} 
               callback = {() => this.enterDigit(i)} 
             />
+  }
+  renderFunctionKey(label,callback){
+    return <KeyDigit 
+              label = {label} 
+              callback = {() => callback()} 
+           />
   }
   render(){
     return(
@@ -78,7 +96,7 @@ class Keyboard extends React.Component{
          
             {this.renderDigitKey(0)}
             {this.renderDigitKey('.')}
-            {this.renderDigitKey('C')}
+            {this.renderFunctionKey('C',() => this.clear())}
          
 
             <KeyEnter label = {'ENTER'} className= {'key-enter'}/>
