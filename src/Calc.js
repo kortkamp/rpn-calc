@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Calc.css';
 
-
+// change (make class) to show different fomats: fidex, exp , float
 function Screen(props){
   return(
     <div className='calc-display'>
