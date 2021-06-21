@@ -38,28 +38,36 @@ class Keyboard extends React.Component{
     super(props);
 
     // keyboard holds its value as a string
-    this.value = '';
+    this.buffer = '';
     this.setDisplay = props.setDisplayCallback;
     this.executeOperation = props.executeOperationCallback;
     
     
   }
+  // ############ buffer operations ###############
+  clearBuffer(){
+    this.buffer = '';
+  };
+  // send a clear command to calc
   clear(){
-    this.value = '';
+    this.clearBuffer();
     this.setDisplay(0);
   }
   enterDigit(digit){
-    console.log(this.value.length)
+    console.log(digit);
+    console.log(this.buffer.length)
 
     // do not enter a 2nd dot
-    if(digit === '.' && this.value.includes('.'))
+    if(digit === '.' && this.buffer.includes('.'))
       return;
     
-    if(this.value.length <= 10){
-      this.value = this.value + digit;
-      this.setDisplay(Number(this.value));
+    if(this.buffer.length <= 10){
+      this.buffer = this.buffer + digit;
+      this.setDisplay(Number(this.buffer));
     }
   }
+
+  //  ############ keys renderization ###############
   renderDigitKey(i){
     return <KeyDigit 
               label = {i} 
@@ -72,6 +80,7 @@ class Keyboard extends React.Component{
               callback = {() => callback()} 
            />
   }
+
   render(){
     return(
       <div className = 'keyboard'>
