@@ -13,7 +13,7 @@ function Screen(props){
 
 function KeyDigit(props){
   return(
-    <button className={'keyboard-button'} onClick={() => props.callback(props.label)}>{props.label} </button>
+      <button className={'keyboard-button'} onClick={() => props.callback(props.label)}>{props.label} </button>
   );
 }
 
@@ -32,21 +32,22 @@ class Keyboard extends React.Component{
 
     // keyboard holds its value as a string
     this.keyboardBufferString = '';
+
     //callbacks
-    this.setDisplay = props.setDisplayCallback;
-    this.executeOperation = props.operationCallback;
-    this.enterOperation = props.enterCallback;
-    
+    this.setCalculatorBuffer = props.setBufferCallback;
+    this.executeOperation = props.operationCallback;    
     
   }
+
   // ############ buffer operations ###############
+
   clearBuffer(){
     this.keyboardBufferString = '';
   };
   // send a clear command to calc
   clear(){
     this.clearBuffer();
-    this.setDisplay(0);
+    this.setCalculatorBuffer('0');
   }
   enterDigit(digit){
     // do not enter a 2nd dot
@@ -55,18 +56,15 @@ class Keyboard extends React.Component{
     
     if(this.keyboardBufferString.length <= 10){
       this.keyboardBufferString = this.keyboardBufferString + digit;
-      this.setDisplay(Number(this.keyboardBufferString));
+      this.setCalculatorBuffer(this.keyboardBufferString);
     }
   }
-  enter(){
-    this.enterOperation(Number(this.keyboardBufferString));
-    this.clearBuffer();
-    
-  }
-  operate(operation){
+
+  callOperation(operation){
     this.executeOperation(operation);
     this.clearBuffer();
   }
+
   //  ############ keys renderization ###############
   renderDigitKey(i){
     return <KeyDigit 
@@ -91,10 +89,16 @@ class Keyboard extends React.Component{
   render(){
     return(
       <div className = 'keyboard'>
-            {this.renderFunctionKey('+',() => this.operate('+'))}
-            {this.renderFunctionKey('-',() => this.operate('-'))}
-            {this.renderFunctionKey('x',() => this.operate('x'))}
-            {this.renderFunctionKey('÷',() => this.operate('÷'))}
+
+            {this.renderFunctionKey('√',() => this.callOperation('√'))}
+            {this.renderFunctionKey('1/x',() => this.callOperation('1/x'))}
+            {this.renderFunctionKey('x²',() => this.callOperation('x²'))}
+            {this.renderFunctionKey('ch',() => this.callOperation('ch'))}
+
+            {this.renderFunctionKey('+',() => this.callOperation('+'))}
+            {this.renderFunctionKey('-',() => this.callOperation('-'))}
+            {this.renderFunctionKey('x',() => this.callOperation('x'))}
+            {this.renderFunctionKey('/',() => this.callOperation('/'))}
 
             {this.renderDigitKey(7)}
             {this.renderDigitKey(8)}
@@ -113,7 +117,7 @@ class Keyboard extends React.Component{
             {this.renderDigitKey('.')}
             {this.renderFunctionKey('C',() => this.clear())}
          
-            {this.renderEnterKey(()=>this.enter())}
+            {this.renderEnterKey(()=>this.callOperation('/n'))}
             
             
       </div>
@@ -127,64 +131,94 @@ class Calc extends React.Component{
     super(props);
     this.state = {
       //value to show in display
-      buffer:0,
+      buffer:'0',
       // stack of values entered
       stack:[]
     }
-    
+    this.buffer = 0;
   }
  
-  setDisplay(value){
-    this.setState({buffer:value})
-    
+  setBuffer(value){
+
+
+    this.setState({
+      buffer:value
+    })
   }
 
-  operate(x,y,operation){
+  operate(operator1, operator2, operation){
+    console.log(operation)
     switch(operation){
       case '+':
-        return(x+y);
+        return operator1 + operator2;
       case '-':
-        return(x-y);
+        return operator1 - operator2;
       case 'x':
-        return(x*y);
+        return operator1 * operator2;
       case '/':
-          return(x/y);
+        //console.log(`tes: ${operator1} op ${operator2} = ${operator1/operator2}`)
+        return operator1 / operator2;      
       default:
-          return 0;
+        return;
     }
-    
+  }
+
+  operateStack(stack,operation){
+
+    let operableStack = stack;
+
+    let operator1 = operableStack.shift();
+    if(!operator1) operator1 = 0;
+    let operator2 = operableStack.shift();
+    if(!operator2) operator2 = 0;
+
+    operableStack.unshift(this.operate(operator1, operator2,operation))
+    return operableStack;
+  }
+
+  // push buffer into stack and return new stack
+  pushStack(){
+    const newStack = [this.buffer].concat(this.state.stack);
+    return newStack;
+  }
+
+  // pull first element from stack into buffer and return new stack
+  pullStack(){
+    const newStack = this.state.stack;
+    this.buffer = newStack.shift();
+    return newStack;
   }
 
   executeOperation(operation){
-    const newStack = this.state.stack;
-    let fromStackValue;
 
-    // pull the last value inserted in stack
-    if(newStack.length>1)
-      fromStackValue = newStack.shift();
-    else
-      fromStackValue = newStack[0];
+    const tempStack  = this.state.stack;
+    let tempBuffer = Number(this.state.buffer);
 
-    const newBuffer = this.operate(fromStackValue, this.state.buffer,operation);
+    if(operation === '/n'){
+      tempStack.push(Number(this.state.buffer))
+    }
+    else{
+      let stackOperator = tempStack.pop();
+      if(!stackOperator) stackOperator = 0;
+      const result = this.operate(stackOperator, tempBuffer, operation);
+      tempBuffer = result;
+    }
+    
     this.setState({
-      buffer:newBuffer,
-      stack:newStack
+      buffer:String(tempBuffer),
+      stack: tempStack
     })
-    
-  }
-  enterNumber(value){
-    
-    const newStack = [this.state.buffer].concat(this.state.stack);
-    this.setState({stack:newStack})
-    console.log(newStack)
-    
+
   }
   
+  
+  //  ############ RENDERIZATION ###############
+
   renderStack(stackArray){
     
     return(
       <ul>
-        {stackArray.map((element) => {return (<li key={element}>{element}</li>)})}
+        {stackArray.map((element,index) => {return (<li key={index}>{element}</li>)})}
       </ul>
     )
   }
@@ -200,7 +234,7 @@ class Calc extends React.Component{
           </div>
           <div className='keyboard-area'>
             <Keyboard 
-              setDisplayCallback= {(value) => this.setDisplay(value)} 
+              setBufferCallback= {(value) => this.setBuffer(value)} 
               operationCallback= {(operation) => this.executeOperation(operation)}
               enterCallback= {(value) => this.enterNumber(value)}  
             />
