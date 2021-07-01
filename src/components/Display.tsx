@@ -1,11 +1,16 @@
 import '../styles/display.scss'
 
-export function Display(){
+type DisplayProps = {
+  value:string
+}
 
+export function Display(props:DisplayProps){
+
+  
 
   return(
     <div className='calc-display'>
-      000001
+      {props.value}
     </div>
   )
 }
