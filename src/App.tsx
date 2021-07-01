@@ -1,9 +1,14 @@
+import {Display } from './components/Display'
+import { Keyboard } from './components/Keyboard'
 
 
 function App() {
   return (
     <div>
-      my cute rpn calc
+
+      <Display />
+      <Keyboard />
+      
     </div>
   );
 }
