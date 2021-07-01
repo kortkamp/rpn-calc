@@ -1,0 +1,14 @@
+.keyboard-calc {
+  display: flex;
+  flex-wrap: wrap;
+
+  .data-keyboard {
+    background: chartreuse;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    *{
+      flex: 1;
+    }
+  }
+}
