@@ -5,30 +5,52 @@ import { Keyboard } from './components/Keyboard'
 
 import './styles/calc.scss'
 
+type MemoryType = {
+  workRegister:number,
+  stack:number[]
+}
+
 function App() {
 
   
   const [displayBuffer, setDisplayBuffer] = useState<string>('0');
 
-  const [stack , setStack] = useState<Array<number>>([0]);
+  const [memory, setMemory] = useState<MemoryType>({workRegister:0,stack:[]})
 
-  console.log(stack)
+
+  console.log(memory.workRegister)
+  console.log(memory.stack)
+
+  function enterData(){
+    memory.stack.unshift(memory.workRegister);
+    setMemory(memory);
+  }
  
-  function enterData(StringValue:string){
-    stack[0] = Number(StringValue);
-    setStack(stack);
+  
+  function udateWorkRegister(StringValue:string){
+    // when keyboard buffer is empty, we are inseting a new number
+    // so push workRegister into stack.
+    if(StringValue.length === 1){
+      memory.stack.unshift(memory.workRegister);
+    }
+    memory.workRegister = Number(StringValue);
+    setMemory(memory)
     setDisplayBuffer(StringValue);
   }
 
-  function executeOperation(operation:(stack:number[]) => number[] ){
-    setStack( operation(stack) );
-    setDisplayBuffer(String(stack[0]))
+  function executeOperation(operation:(memory:MemoryType) => MemoryType ){
+    const newMemory = operation(memory);
+    setMemory( newMemory );
+    setDisplayBuffer(String(newMemory.workRegister));
   }
 
   return (
     <div className='calc'>
       <Display value = {displayBuffer} />
-      <Keyboard enterDataCallback = {enterData} operationCallback= {executeOperation} />
+      <Keyboard 
+        enterDataCallback = {enterData} 
+        udateWorkRegisterCallback = {udateWorkRegister} 
+        operationCallback= {executeOperation} />
     </div>
   );
 }

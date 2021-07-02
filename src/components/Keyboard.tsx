@@ -8,9 +8,15 @@ import {Operations} from '../services/Operations'
 
 import '../styles/keyboard.scss'
 
+type MemoryType = {
+  workRegister:number,
+  stack:number[]
+}
+
 type KeyboardProps = {
-  enterDataCallback: (digit:string)=> void,
-  operationCallback: (operation:(stack:number[]) => number[] ) => void
+  enterDataCallback: () => void,
+  udateWorkRegisterCallback: (digit:string)=> void,
+  operationCallback: (operation:(memory:MemoryType) => MemoryType ) => void
 }
 
 
@@ -22,27 +28,32 @@ export function Keyboard( props:KeyboardProps ){
   function handleDigit(keyName:string){
 
     // if keyboardBuffer is empty, push last result in stack
-    if(!keyboardBuffer){
-      props.operationCallback( Operations.enter.exec );
-    }
+    // if(!keyboardBuffer){
+    //   props.operationCallback( Operations.enter.exec );
+    // }
 
     const updatedBuffer = keyboardBuffer + keyName;
 
     if(keyboardBuffer.length <= Configs.MAX_DISPLAY_LENGHT){
       setKeyboardBuffer(updatedBuffer);
     }
-    props.enterDataCallback(updatedBuffer)
+    props.udateWorkRegisterCallback(updatedBuffer)
 
   }
 
   function clearBuffer(){
     setKeyboardBuffer('');
-    props.enterDataCallback('0');
+    props.udateWorkRegisterCallback('0');
   }
 
-  function handleOperation(operation:(stack:number[]) => number[]){
+  function handleOperation(operation:(memory:MemoryType) => MemoryType){
     setKeyboardBuffer('');
     props.operationCallback( operation );
+  }
+
+  function handleEnterKey(){
+    setKeyboardBuffer('');
+    //props.enterDataCallback();
   }
 
   // function renderOperationKey(){
@@ -60,7 +71,7 @@ export function Keyboard( props:KeyboardProps ){
       <DigitKeyboard handleDigit = {handleDigit} />
       <div className='data-keyboard'>
         <Key label='C' keyFunction={clearBuffer} />
-        <Key label='↵' keyFunction={() => handleOperation(Operations.enter.exec)} />
+        <Key label='↵' keyFunction={handleEnterKey} />
       </div>
     </div>
   )

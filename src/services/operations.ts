@@ -3,44 +3,60 @@
 //   exec: (stack:Array<number>) => Array<number>
 // }
 
+type MemoryType = {
+  workRegister:number,
+  stack:number[]
+}
 
-// get stack[0] and stack[1]  but drop stack[1]
-const getTwoOperands = (stack:Array<number>) => {
-  const newStack = stack;
-  const operand1 = newStack[0];
-  let [operand2] = newStack.splice(1,1);
-  if(!operand2){
-    operand2 = 0;
+
+
+const addOperation = (memory:MemoryType) => { 
+
+  const memoryCopy = Object.assign({},memory);
+
+  let operand = memoryCopy.stack.shift();
+  if(!operand){
+    operand = 0;
   }
-  return [operand1,operand2,newStack]
+  memoryCopy.workRegister += operand;
+
+  return memoryCopy;
 }
 
-const addOperation = (stack:Array<number>) => { 
-  const [operand1, operand2, newStack] = getTwoOperands(stack) as [number,number,number[]]
-  const result = operand2 + operand1;
-  newStack[0] = result;
-  return newStack;
+const subOperation = (memory:MemoryType) => { 
+  const memoryCopy = Object.assign({},memory);
+
+  let operand = memoryCopy.stack.shift();
+  if(!operand){
+    operand = 0;
+  }
+  memoryCopy.workRegister -= operand;
+  
+  return memoryCopy;
 }
 
-const subOperation = (stack:Array<number>) => { 
-  const [operand1, operand2, newStack] = getTwoOperands(stack) as [number,number,number[]]
-  const result = operand2 - operand1;
-  newStack[0] = result;
-  return newStack;
+const multOperation = (memory:MemoryType) => { 
+  const memoryCopy = Object.assign({},memory);
+
+  let operand = memoryCopy.stack.shift();
+  if(!operand){
+    operand = 0;
+  }
+  memoryCopy.workRegister *= operand;
+  
+  return memoryCopy;
 }
 
-const multOperation = (stack:Array<number>) => {
-  const [operand1, operand2, newStack] = getTwoOperands(stack) as [number,number,number[]]
-  const result = operand2 * operand1;
-  newStack[0] = result;
-  return newStack;
-}
+const divOperation = (memory:MemoryType) => { 
+  const memoryCopy = Object.assign({},memory);
 
-const divOperation = (stack:Array<number>) => {
-  const [operand1, operand2, newStack] = getTwoOperands(stack) as [number,number,number[]]
-  const result = operand2 / operand1;
-  newStack[0] = result;
-  return newStack;
+  let operand = memoryCopy.stack.shift();
+  if(!operand){
+    operand = 0;
+  }
+  memoryCopy.workRegister /= operand;
+  
+  return memoryCopy;
 }
 
 
@@ -58,7 +74,7 @@ export const Operations = {
     exec: addOperation
   },
   sub:{
-    label:'*',
+    label:'-',
     exec: subOperation
   },
   mult:{
@@ -66,7 +82,7 @@ export const Operations = {
     exec: multOperation
   },
   div:{
-    label:'*',
+    label:'/',
     exec: divOperation
   },
 
