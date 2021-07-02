@@ -68,10 +68,12 @@ export function Keyboard( props:KeyboardProps ){
         <Key label='x' keyFunction={() => handleOperation(Operations.mult.exec)} />
         <Key label='/' keyFunction={() => handleOperation(Operations.div.exec)} />
       </div>
-      <DigitKeyboard handleDigit = {handleDigit} />
-      <div className='data-keyboard'>
-        <Key label='C' keyFunction={clearBuffer} />
-        <Key label='↵' keyFunction={handleEnterKey} />
+      <div className = 'data-area'>
+        <DigitKeyboard handleDigit = {handleDigit} />
+        <div className='data-keyboard'>
+          <Key label='C' keyFunction={clearBuffer} />
+          <Key label='↵' keyFunction={handleEnterKey} />
+        </div>
       </div>
     </div>
   )

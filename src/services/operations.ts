@@ -8,19 +8,41 @@ type MemoryType = {
   stack:number[]
 }
 
+type OperationType = {
+  operation: (operand1:number,operand2:number) => number
+}
 
+const MathFunctions = {
+  add:(operand1:number,operand2:number) => operand1 + operand2,
+  sub:(operand1:number,operand2:number) => operand1 - operand2,
+  mult:(operand1:number,operand2:number) => operand1 * operand2,
+  div:(operand1:number,operand2:number) => operand1 / operand2
+}
+
+
+const operate = (
+    memory:MemoryType, 
+    operation: (operand1:number,operand2:number)=> number 
+  ) => {
+    
+    const memoryCopy = Object.assign({},memory);
+
+    let operand = memoryCopy.stack.shift();
+    if(!operand){
+      operand = 0;
+    }
+    //memoryCopy.workRegister += operand;
+
+    memoryCopy.workRegister = operation(memoryCopy.workRegister , operand);
+
+    return memoryCopy;
+
+}
 
 const addOperation = (memory:MemoryType) => { 
 
-  const memoryCopy = Object.assign({},memory);
-
-  let operand = memoryCopy.stack.shift();
-  if(!operand){
-    operand = 0;
-  }
-  memoryCopy.workRegister += operand;
-
-  return memoryCopy;
+  return operate(memory,MathFunctions.add)
+  
 }
 
 const subOperation = (memory:MemoryType) => { 

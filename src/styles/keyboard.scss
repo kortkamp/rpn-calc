@@ -1,14 +1,22 @@
 .keyboard-calc {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
 
-  .data-keyboard {
-    background: chartreuse;
+  margin: 16px;
+
+  .data-area {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
-    *{
-      flex: 1;
+
+    .data-keyboard {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      *{
+        flex: 1;
+      }
     }
   }
+
 }

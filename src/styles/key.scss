@@ -1,6 +1,27 @@
 .calc-key {
-  height: 64px;
+
+  box-sizing: border-box;
+
+  background: rgb(117, 117, 117);
+  color: rgb(209, 209, 209);
+
+  box-shadow: 0 0 3px 1px #888888;
+
+  height: 54px;
   width: 64px;
 
+  margin: 4px;
+  
+  border: 0px solid black;
+  border-top: 3px solid rgb(90, 90, 90);
+
+  border-radius: 16px;
+
   font-size: 30px;
+
+  &:active {
+    border-top: 3px solid transparent
+  }
+  
 }
+
