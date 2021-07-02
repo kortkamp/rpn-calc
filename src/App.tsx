@@ -1,32 +1,34 @@
 import { useState } from 'react';
 import { Display } from './components/Display'
 import { Keyboard } from './components/Keyboard'
+// import { Operations } from './services/Operations';
 
 import './styles/calc.scss'
 
 function App() {
 
+  
+  const [displayBuffer, setDisplayBuffer] = useState<string>('0');
 
-  const [buffer, setBuffer] = useState<string>('0');
+  const [stack , setStack] = useState<Array<number>>([0]);
 
-  const stack = [0,0,0,0];
-
-  function enterDigit(digit:string){
-    console.log(digit);
-    if(buffer.length <= 11)
-      setBuffer(buffer + digit);
+  console.log(stack)
+ 
+  function enterData(StringValue:string){
+    stack[0] = Number(StringValue);
+    setStack(stack);
+    setDisplayBuffer(StringValue);
   }
 
-  function executeOperation(operation:string){
-
+  function executeOperation(operation:(stack:number[]) => number[] ){
+    setStack( operation(stack) );
+    setDisplayBuffer(String(stack[0]))
   }
 
   return (
     <div className='calc'>
-
-      <Display value = {buffer} />
-      <Keyboard digitCallback = {enterDigit} operationCallback= {executeOperation} />
-      
+      <Display value = {displayBuffer} />
+      <Keyboard enterDataCallback = {enterData} operationCallback= {executeOperation} />
     </div>
   );
 }
