@@ -42,7 +42,7 @@ Run the project
 ```
 <br>
 
-## :bookmark_tabs: Licence
+## :bookmark_tabs: License
 
 This project is released under [MIT License]()
 
