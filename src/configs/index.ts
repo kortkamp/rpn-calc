@@ -1,5 +1,5 @@
 export const Configs ={
 
-  MAX_DISPLAY_LENGHT: 11
+  MAX_DISPLAY_LENGHT: 12
   
 }

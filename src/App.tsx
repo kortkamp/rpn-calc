@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Display } from './components/Display'
 import { Keyboard } from './components/Keyboard'
+import { Configs } from './configs';
 // import { Operations } from './services/Operations';
 
 import './styles/calc.scss'
@@ -18,8 +19,7 @@ function App() {
   const [memory, setMemory] = useState<MemoryType>({workRegister:0,stack:[]})
 
 
-  console.log(memory.workRegister)
-  console.log(memory.stack)
+  
 
   function enterData(){
     memory.stack.unshift(memory.workRegister);
@@ -38,10 +38,22 @@ function App() {
     setDisplayBuffer(StringValue);
   }
 
+  function makeDisplayString(value: number){
+    let displayString = String(value);
+    console.log(displayString.length);
+    if(displayString.length > Configs.MAX_DISPLAY_LENGHT){
+      displayString = value.toExponential(Configs.MAX_DISPLAY_LENGHT - 5)
+    }
+    console.log(displayString);
+    return displayString;
+  }
+
   function executeOperation(operation:(memory:MemoryType) => MemoryType ){
     const newMemory = operation(memory);
     setMemory( newMemory );
-    setDisplayBuffer(String(newMemory.workRegister));
+
+
+    setDisplayBuffer(makeDisplayString(newMemory.workRegister));
   }
 
   return (
