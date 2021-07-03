@@ -8,9 +8,6 @@ type MemoryType = {
   stack:number[]
 }
 
-type OperationType = {
-  operation: (operand1:number,operand2:number) => number
-}
 
 const MathFunctions = {
   add:(operand1:number,operand2:number) => operand1 + operand2,
@@ -39,73 +36,25 @@ const operate = (
 
 }
 
-const addOperation = (memory:MemoryType) => { 
-
-  return operate(memory,MathFunctions.add)
-  
-}
-
-const subOperation = (memory:MemoryType) => { 
-  const memoryCopy = Object.assign({},memory);
-
-  let operand = memoryCopy.stack.shift();
-  if(!operand){
-    operand = 0;
-  }
-  memoryCopy.workRegister -= operand;
-  
-  return memoryCopy;
-}
-
-const multOperation = (memory:MemoryType) => { 
-  const memoryCopy = Object.assign({},memory);
-
-  let operand = memoryCopy.stack.shift();
-  if(!operand){
-    operand = 0;
-  }
-  memoryCopy.workRegister *= operand;
-  
-  return memoryCopy;
-}
-
-const divOperation = (memory:MemoryType) => { 
-  const memoryCopy = Object.assign({},memory);
-
-  let operand = memoryCopy.stack.shift();
-  if(!operand){
-    operand = 0;
-  }
-  memoryCopy.workRegister /= operand;
-  
-  return memoryCopy;
-}
 
 
 export const Operations = {
-  enter:{
-    label:'E',
-    exec: (stack:Array<number>) => {
-      const newStack = stack;
-      newStack.unshift(stack[0])
-      return newStack;
-    }
-  },
+  
   add:{
     label:'+',
-    exec: addOperation
+    exec: (memory:MemoryType) => operate(memory , MathFunctions.add)
   },
   sub:{
     label:'-',
-    exec: subOperation
+    exec: (memory:MemoryType) => operate(memory , MathFunctions.sub)
   },
   mult:{
     label:'*',
-    exec: multOperation
+    exec: (memory:MemoryType) => operate(memory , MathFunctions.mult)
   },
   div:{
     label:'/',
-    exec: divOperation
+    exec: (memory:MemoryType) => operate(memory , MathFunctions.div)
   },
 
   test:{
