@@ -4,7 +4,7 @@
 
 <center>
 
-![Img](https://github.com/kortkamp/rpn-calc/.github/calc-img.jpg)
+![Img](https://github.com/kortkamp/rpn-calc/blob/master/.github/calc-img.jpg)
 
 </center>
 
