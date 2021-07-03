@@ -44,7 +44,7 @@ Run the project
 
 ## :bookmark_tabs: Licence
 
-This project is released under [MIT Licence]()
+This project is released under [MIT License]()
 
 ## :grin: Author
 [![Github Badge](https://img.shields.io/badge/-kortkamp-grey?style=flat&logo=github&logoColor=white&link=https://github.com/kortkamp/)](https://www.github.com/kortkamp/)
