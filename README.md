@@ -2,6 +2,11 @@
 
 <center><h1>RPN Calc</h1></center>
 
+<center>
+
+![Img](https://github.com/kortkamp/rpn-calc/.github/calc-img.jpg)
+
+</center>
 
 ## :open_book: About 
 Project made in React with Typescript as a refactor of my old class based React Calculator.
