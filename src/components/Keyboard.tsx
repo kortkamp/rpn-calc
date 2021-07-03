@@ -36,8 +36,9 @@ export function Keyboard( props:KeyboardProps ){
 
     if(keyboardBuffer.length <= Configs.MAX_DISPLAY_LENGHT){
       setKeyboardBuffer(updatedBuffer);
+      props.udateWorkRegisterCallback(updatedBuffer)
     }
-    props.udateWorkRegisterCallback(updatedBuffer)
+    
 
   }
 
